@@ -5,13 +5,9 @@
     <title>Athenry AC</title>
   </head>
   <body>
+		<h1> Latest News </h1>
     <div id="app">
-      <ul>
-        <li v-for="item in news">{{item.title}}</li>
-      </ul>
-      <ol>
-        <news-item v-for="item in news" v-bind:item="item" v-bind:key="item.nid"></news-item>
-      </ol>
+    	<news-item v-for="item in news" v-bind:item="item" v-bind:key="item.nid"></news-item>
     </div>
     <script src="/dist/build.js"></script>
   </body>
