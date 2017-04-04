@@ -1,16 +1,19 @@
 import Vue from 'vue'
 import axios from 'axios';
 
-new Vue({
+Vue.component('news-item', {
+  props: ['item'],
+  template: '<li>{{ item.title }}</li>'
+})
+
+var app = new Vue({
   el: '#app',
 	data: {
 		news: [],
 	},
   mounted () {
-    axios.get(`https://wwwathenryaccom.docksal/node.json?sort=nid&direction=DESC&limit=10`)
+    axios.get('https://wwwathenryaccom.docksal/node.json?sort=nid&direction=DESC&limit=10')
     .then(response => {
-			console.log(response.data.list);
-			console.log(this);
       this.news = response.data.list
     })
     .catch(e => {

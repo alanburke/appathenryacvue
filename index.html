@@ -6,10 +6,13 @@
   </head>
   <body>
     <div id="app">
-			<ul>
-				<li v-for="item in news">{{item.title}}</li>
-			</ul>
-		</div>
+      <ul>
+        <li v-for="item in news">{{item.title}}</li>
+      </ul>
+      <ol>
+        <news-item v-for="item in news" v-bind:item="item" v-bind:key="item.nid"></news-item>
+      </ol>
+    </div>
     <script src="/dist/build.js"></script>
   </body>
 </html>
