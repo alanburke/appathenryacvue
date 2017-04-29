@@ -4,14 +4,20 @@ import trimHTML from 'trim-html'
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
-Vue.component('news-item', {
+let source = {
+  news: [],
+  errors: []
+}
+
+var newsTeaser = Vue.component('news-teaser', {
   props: ['item'],
-  template: 
-    '<article>' +
-      '<h2>{{ item.title }}</h2>' +
-      '<img :src="image">' +
-      '<div v-html="teaser"></div>' +
-    '</article>',
+  template: `
+    <article>
+      <h2>{{ item.title }}</h2>
+      <img v-if="image" :src="image">
+      <p v-html="teaser"></p>
+    </article>
+    `,
   computed: {
     teaser: function () {
       var teaser = trimHTML(this.item.body.value, {limit: 300, preserveTags: false})
@@ -31,18 +37,28 @@ Vue.component('news-item', {
   }
 })
 
+var newslisting = Vue.component('newslisting', {
+  data: function () {
+    return source
+  },
+  template: '<div><news-teaser v-for="item in news" v-bind:item="item.item" v-bind:key="item.nid"></news-teaser></div>'
+})
+
 var app = new Vue({
   el: '#app',
-  data: {
-    news: [],
-  },
+  data: source,
   mounted () {
     axios.get('https://wwwathenryaccom.docksal/node.json?sort=nid&direction=DESC&limit=10&promote=1')
     .then(response => {
-      this.news = response.data.list
+      var news = [];
+      var self = this;
+      response.data.list.forEach(function(element) {
+        self.news.push({ 'id': element.nid, 'item' : element });
+      });
     })
     .catch(e => {
+      console.log(e);
       this.errors.push(e)
     })
-  }
+  },
 })
