@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import trimHTML from 'trim-html'
+import moment from 'moment'
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
 
@@ -12,16 +13,31 @@ let source = {
 var newsTeaser = Vue.component('news-teaser', {
   props: ['item'],
   template: `
-    <article>
-      <h2>{{ item.title }}</h2>
-      <img v-if="image" :src="image">
-      <p v-html="teaser"></p>
-    </article>
+    <div class="box">
+      <article class="media">
+        <div v-if="image" class="media-left">
+          <figure class="image">
+            <img v-if="image" :src="image">
+          </figure>
+        </div>
+        <div class="media-content">
+          <div class="content">
+            <h2 class="title">{{ item.title }}</h2>
+            <p class="subtitle"><small>Published {{ published }} </small></p>
+            <p v-html="teaser"></p>
+            <p><a v-bind:href=item.url>Read full story&hellip;</a></p>
+          </div>
+        </div>
+      </article>
+    </div>
     `,
   computed: {
     teaser: function () {
       var teaser = trimHTML(this.item.body.value, {limit: 300, preserveTags: false})
       return teaser.html
+    },
+    published: function () {
+      return moment.unix(this.item.created).format("Do MMMM YYYY")
     }
   },
   asyncComputed: {
@@ -41,7 +57,7 @@ var newslisting = Vue.component('newslisting', {
   data: function () {
     return source
   },
-  template: '<div><news-teaser v-for="item in news" v-bind:item="item.item" v-bind:key="item.nid"></news-teaser></div>'
+  template: '<section class="section"><news-teaser v-for="item in news" v-bind:item="item.item" v-bind:key="item.nid"></news-teaser></section>'
 })
 
 var app = new Vue({
