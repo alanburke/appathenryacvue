@@ -64,7 +64,7 @@ var app = new Vue({
   el: '#app',
   data: source,
   mounted () {
-    axios.get('https://wwwathenryaccom.docksal/node.json?sort=nid&direction=DESC&limit=10&promote=1')
+    axios.get('https://www.athenryac.com/node.json?sort=nid&direction=DESC&limit=10&promote=1')
     .then(response => {
       var news = [];
       var self = this;
